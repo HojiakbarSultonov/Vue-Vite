@@ -1,5 +1,5 @@
 <template>
-  <div class="app">
+  <div class="app font-monospace">
     <div class="content">
       <AppInfo />
       <div class="search-panel">
@@ -14,10 +14,10 @@
 <script>
 
 import AppInfo from '@/appInfo/AppInfo.vue';
-import SearchPanel from '@/search-panel/SearchPanel.vue';
-import AppFilter from '@/appFilter/AppFilter.vue';
-import MovieList from '@/movieList/MovieList.vue';
-import MovieAddForm from '@/movieAddForm/MovieAddForm.vue';
+import SearchPanel from '../search-panel/SearchPanel.vue';
+import AppFilter from '../appFilter/AppFilter.vue';
+import MovieList from '../movieList/MovieList.vue';
+import MovieAddForm from '../movieAddForm/MovieAddForm.vue';
 
 export default {
   components: {
