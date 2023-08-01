@@ -1,14 +1,39 @@
 <template>
     <ul class="movie-list list-group">
-      <MovieListItem/>
-      <MovieListItem/>
-      <MovieListItem/>
+      
+      <MovieListItem v-for="movie in movies" :movie="movie"/>
+    
     </ul>
 </template>
 <script>
 import MovieListItem from '../movieListItem/MovieListItem.vue';
 
-export default { components: { MovieListItem } }
+export default { components: { MovieListItem },
+data(){
+    return {
+        movies: [
+            {
+                name:'Omar',
+                viewers:911,
+                favourite:false,
+                like:true,
+            },
+            {
+                name:'Ertugrul',
+                viewers:711,
+                favourite:false,
+                like:false,
+            },
+            {
+                name:'Empire of osmon',
+                viewers:811,
+                favourite:true,
+                like:false,
+            },
+        ]
+    }
+} }
+
 </script>
 <style scoped>
 .movie-list {
