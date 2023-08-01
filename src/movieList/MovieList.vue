@@ -9,30 +9,13 @@
 import MovieListItem from '../movieListItem/MovieListItem.vue';
 
 export default { components: { MovieListItem },
-data(){
-    return {
-        movies: [
-            {
-                name:'Omar',
-                viewers:911,
-                favourite:false,
-                like:true,
-            },
-            {
-                name:'Ertugrul',
-                viewers:711,
-                favourite:false,
-                like:false,
-            },
-            {
-                name:'Empire of osmon',
-                viewers:811,
-                favourite:true,
-                like:false,
-            },
-        ]
+props:{
+    movies:{
+        type:Array,
+        required:true
     }
-} }
+}
+}
 
 </script>
 <style scoped>

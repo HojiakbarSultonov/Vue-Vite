@@ -1,5 +1,5 @@
 <template >
-    <div>
+ 
         <li class="list-group-item d-flex justify-content-between" :class="[{like:movie.like}, {favourite:movie.favourite}]">
             <span class="list-group-item-label">{{ movie.name }}</span>
             <input type="number" class="list-group-item-input" :value="movie.viewers">
@@ -13,7 +13,7 @@
                 <i class="fas fa-star"></i>
             </div>
         </li>
-    </div>
+   
 </template>
 <script>
 export default {
@@ -73,11 +73,11 @@ export default {
         font-size: 16px;
         color: #ffd700;
         transition: 0.3s all;
-        transform: translate(30px);
+        transform: translateX(30px);
         opacity: 0;
     }
 
-    .list-group-item.like .fa-start{
+    .list-group-item.like .fa-star{
         opacity: 1;
         transform: translateX(0);
     }
