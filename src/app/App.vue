@@ -35,18 +35,21 @@ export default {
                 viewers:911,
                 like:true,
                 favourite:false,
+                id:1
             },
             {
                 name:'Ertugrul',
                 viewers:711,
                 like:false,
                 favourite:false,
+                id:2
             },
             {
                 name:'Empire of osmon',
                 viewers:811,
                 like:true,
                 favourite:true,
+                id:3
             },
         ]
     }
