@@ -6,8 +6,8 @@
         <SearchPanel />
         <AppFilter />
       </div>
-      <MovieList :movies="movies"/>
-      <MovieAddForm/>
+      <MovieList :movies="movies" />
+      <MovieAddForm @createMovie = 'createMovie'/>
     </div>
   </div>
 </template>
@@ -50,7 +50,13 @@ export default {
             },
         ]
     }
-} 
+
+} ,
+methods:{
+  createMovie(item){
+    this.movies.push(item)
+  }
+}
 }
 </script>
 <style>
