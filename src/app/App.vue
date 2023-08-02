@@ -6,7 +6,7 @@
         <SearchPanel />
         <AppFilter />
       </div>
-      <MovieList :movies="movies" />
+      <MovieList :movies="movies" @onLike = 'onLikeHandler'/>
       <MovieAddForm @createMovie = 'createMovie'/>
     </div>
   </div>
@@ -58,6 +58,11 @@ export default {
 methods:{
   createMovie(item){
     this.movies.push(item)
+  },
+  onLikeHandler(id){
+    const arr = this.movies.map(item=>{
+      item.id === id ? item.like = !item.like : item
+    })
   }
 }
 }
