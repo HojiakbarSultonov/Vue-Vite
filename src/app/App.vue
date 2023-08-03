@@ -3,10 +3,11 @@
     <div class="content">
       <AppInfo :allMoviesCount='movies.length' :favouriteMoviesCount="movies.filter(c => c.favourite).length" />
       <div class="search-panel">
-        <SearchPanel :updateTermHandler = "updateTermHandler"/>
-        <AppFilter />
+        <SearchPanel :updateTermHandler="updateTermHandler" />
+        <AppFilter :updateFilterHandler = "updateFilterHandler" :filterName="filter"/>
       </div>
-      <MovieList :movies="onSearchHandler(movies, term)" @onToggle="onToggleHandler" @onRemove = 'onRemoveHandler'/>
+      <MovieList :movies="onFilterHandler(onSearchHandler(movies, term), filter)" @onToggle="onToggleHandler"
+        @onRemove='onRemoveHandler' />
       <MovieAddForm @createMovie='createMovie' />
     </div>
   </div>
@@ -14,9 +15,9 @@
 <script>
 
 import AppInfo from '@/appInfo/AppInfo.vue';
-import SearchPanel from '../search-panel/SearchPanel.vue';
+import SearchPanel from '@/search-panel/SearchPanel.vue';
 import AppFilter from '../appFilter/AppFilter.vue';
-import MovieList from '../movieList/MovieList.vue';
+import MovieList from '@/movieList/MovieList.vue';
 import MovieAddForm from '../movieAddForm/MovieAddForm.vue';
 
 export default {
@@ -52,36 +53,56 @@ export default {
           id: 3
         },
       ],
-      term:'',
+      term: '',
+      filter: 'all'
     }
 
   },
   methods: {
+
     createMovie(item) {
       this.movies.push(item)
     },
+
     onToggleHandler({ id, prop }) {
       this.movies = this.movies.map(item => {
         if (item.id === id) {
           return { ...item, [prop]: !item[prop] };
-        } 
+        }
         return item
       })
     },
-    onRemoveHandler(id){
-      this.movies = this.movies.filter(c=>c.id !== id)
+
+    onRemoveHandler(id) {
+      this.movies = this.movies.filter(c => c.id !== id)
     },
-    onSearchHandler(arr, term){
-      if(term.length === 0){
+
+    onSearchHandler(arr, term) {
+      if (term.length === 0) {
         return arr
       }
-      return arr.filter(c=>c.name.toLowerCase().indexOf(term) > -1)
+      return arr.filter(c => c.name.toLowerCase().indexOf(term) > -1)
     },
-    updateTermHandler(term){
+
+    onFilterHandler(arr, filter) {
+      switch (filter) {
+        case 'popular':
+          return arr.filter(c => c.like)
+        case 'mostViewers':
+          return arr.filter(c => c.viewers > 500)
+        default:
+          return arr
+      }
+    },
+
+    updateTermHandler(term) {
       this.term = term
+    },
+
+    updateFilterHandler(filter) {
+      this.filter = filter
     }
-  }
-}
+  }}
 </script>
 <style>
 .app {
