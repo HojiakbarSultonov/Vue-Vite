@@ -1,5 +1,5 @@
 <template lang="">
-   <input type="text" placeholder="Kinolarni qidirish" class="form-control search-input" @input = "changeHandler" :value = 'term'>
+   <input type="text" placeholder="Kinolarni qidirish" class="form-control search-input" @input = "changeHandler" :value = "term">
 </template>
 <script>
 export default {
