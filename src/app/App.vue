@@ -13,11 +13,21 @@
       </Box>
 
       <Box v-else-if="isLoading" class="d-flex justify-content-center">
-        <Loader/>
+        <Loader />
       </Box>
 
       <MovieList v-else :movies="onFilterHandler(onSearchHandler(movies, term), filter)" @onToggle="onToggleHandler"
         @onRemove='onRemoveHandler' />
+      <Box class="d-flex justify-content-center">
+        <nav aria-label="pagination">
+          <ul class="pagination pagination-sm">
+            <li @click="changePageHandler(pageNum)" key="pageNum" :class="{ active: pageNum === page }" aria-current="page"
+              v-for="pageNum in totalPage">
+              <span class="page-link">{{ pageNum }}</span>
+            </li>
+          </ul>
+        </nav>
+      </Box>
       <MovieAddForm @createMovie='createMovie' />
     </div>
   </div>
@@ -38,14 +48,17 @@ export default {
     AppFilter,
     MovieList,
     MovieAddForm,
-    
+
   },
   data() {
     return {
       movies: [],
       term: '',
       filter: 'all',
-      isLoading: false
+      isLoading: false,
+      page: 1,
+      limit: 10,
+      totalPage: 0
     }
 
   },
@@ -93,6 +106,7 @@ export default {
     updateFilterHandler(filter) {
       this.filter = filter
     },
+   
     // logger() {
     //   console.log("Mounted");
     // },
@@ -109,26 +123,41 @@ export default {
     async fetchData() {
       try {
         this.isLoading = true
-        const { data } = await axios.get("https://jsonplaceholder.typicode.com/posts?_limit=10")
-        const newArr = data.map(el => ({
+        const response = await axios.get("https://jsonplaceholder.typicode.com/posts", {
+          params: {
+            _limit: this.limit,
+            _page: this.page
+          }
+        })
+        const newArr = response.data.map(el => ({
           id: el.id,
           name: el.title,
           viewers: el.id * 10,
           like: false,
           favourite: false
         }))
+        this.totalPage = Math.ceil(response.headers['x-total-count'] / this.limit)
         this.movies = newArr
-
+        console.log(this.totalPage);
       } catch (error) {
         alert(error.message)
       } finally {
         this.isLoading = false
       }
     },
+    changePageHandler(page) {
+      this.page = page
+     
+    },
   },
   mounted() {
     this.fetchData()
   },
+  watch:{
+    page(){
+      this.fetchData()
+    }
+  }
 }
 </script>
 <style>
