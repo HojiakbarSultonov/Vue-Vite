@@ -7,7 +7,16 @@
         <SearchPanel :updateTermHandler="updateTermHandler" />
         <AppFilter :updateFilterHandler="updateFilterHandler" :filterName="filter" />
       </div>
-      <MovieList :movies="onFilterHandler(onSearchHandler(movies, term), filter)" @onToggle="onToggleHandler"
+
+      <Box v-if="!movies.length && !isLoading">
+        <h1>Kinolar yo'q</h1>
+      </Box>
+
+      <Box v-else-if="isLoading" class="d-flex justify-content-center">
+        <Loader/>
+      </Box>
+
+      <MovieList v-else :movies="onFilterHandler(onSearchHandler(movies, term), filter)" @onToggle="onToggleHandler"
         @onRemove='onRemoveHandler' />
       <MovieAddForm @createMovie='createMovie' />
     </div>
@@ -28,13 +37,15 @@ export default {
     SearchPanel,
     AppFilter,
     MovieList,
-    MovieAddForm
+    MovieAddForm,
+    
   },
   data() {
     return {
       movies: [],
       term: '',
-      filter: 'all'
+      filter: 'all',
+      isLoading: false
     }
 
   },
@@ -97,6 +108,7 @@ export default {
     // },
     async fetchData() {
       try {
+        this.isLoading = true
         const { data } = await axios.get("https://jsonplaceholder.typicode.com/posts?_limit=10")
         const newArr = data.map(el => ({
           id: el.id,
@@ -108,7 +120,9 @@ export default {
         this.movies = newArr
 
       } catch (error) {
-        alert(error)
+        alert(error.message)
+      } finally {
+        this.isLoading = false
       }
     },
   },
