@@ -21,8 +21,8 @@
       <Box class="d-flex justify-content-center">
         <nav aria-label="pagination">
           <ul class="pagination pagination-sm">
-            <li @click="changePageHandler(pageNum)" key="pageNum" :class="{ active: pageNum === page }" aria-current="page"
-              v-for="pageNum in totalPage">
+            <li @click="changePageHandler(pageNum)" key="pageNum" :class="{ active: pageNum === page }"
+              aria-current="page" v-for="pageNum in totalPage">
               <span class="page-link">{{ pageNum }}</span>
             </li>
           </ul>
@@ -36,9 +36,9 @@
 
 import AppInfo from '@/appInfo/AppInfo.vue';
 import SearchPanel from '@/search-panel/SearchPanel.vue';
-import AppFilter from '../appFilter/AppFilter.vue';
+import AppFilter from '@/appFilter/AppFilter.vue';
 import MovieList from '@/movieList/MovieList.vue';
-import MovieAddForm from '../movieAddForm/MovieAddForm.vue';
+import MovieAddForm from '@/movieAddForm/MovieAddForm.vue';
 import axios from 'axios';
 
 export default {
@@ -65,7 +65,12 @@ export default {
   methods: {
 
     createMovie(item) {
-      this.movies.push(item)
+      try {
+        const response = axios.post("https://jsonplaceholder.typicode.com/posts", item)
+        this.movies.push(response.data)
+      } catch (error) {
+        alert(error.message)
+      }
     },
 
     onToggleHandler({ id, prop }) {
@@ -77,8 +82,14 @@ export default {
       })
     },
 
-    onRemoveHandler(id) {
-      this.movies = this.movies.filter(c => c.id !== id)
+    async onRemoveHandler(id) {
+      try {
+        const response = await axios.delete(`https://jsonplaceholder.typicode.com/posts/${id}`)
+        this.movies = this.movies.filter(c => c.id !== id)
+      } catch (error) {
+        alert(error.message)
+      }
+
     },
 
     onSearchHandler(arr, term) {
@@ -106,7 +117,7 @@ export default {
     updateFilterHandler(filter) {
       this.filter = filter
     },
-   
+
     // logger() {
     //   console.log("Mounted");
     // },
@@ -147,14 +158,14 @@ export default {
     },
     changePageHandler(page) {
       this.page = page
-     
+
     },
   },
   mounted() {
     this.fetchData()
   },
-  watch:{
-    page(){
+  watch: {
+    page() {
       this.fetchData()
     }
   }
