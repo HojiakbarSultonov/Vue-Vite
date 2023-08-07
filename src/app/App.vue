@@ -1,10 +1,11 @@
 <template>
   <div class="app font-monospace">
+    <!-- <button @click="fetchData()">Click</button> -->
     <div class="content">
       <AppInfo :allMoviesCount='movies.length' :favouriteMoviesCount="movies.filter(c => c.favourite).length" />
       <div class="search-panel">
         <SearchPanel :updateTermHandler="updateTermHandler" />
-        <AppFilter :updateFilterHandler = "updateFilterHandler" :filterName="filter"/>
+        <AppFilter :updateFilterHandler="updateFilterHandler" :filterName="filter" />
       </div>
       <MovieList :movies="onFilterHandler(onSearchHandler(movies, term), filter)" @onToggle="onToggleHandler"
         @onRemove='onRemoveHandler' />
@@ -19,6 +20,7 @@ import SearchPanel from '@/search-panel/SearchPanel.vue';
 import AppFilter from '../appFilter/AppFilter.vue';
 import MovieList from '@/movieList/MovieList.vue';
 import MovieAddForm from '../movieAddForm/MovieAddForm.vue';
+import axios from 'axios';
 
 export default {
   components: {
@@ -30,29 +32,7 @@ export default {
   },
   data() {
     return {
-      movies: [
-        {
-          name: 'Omar',
-          viewers: 911,
-          like: true,
-          favourite: false,
-          id: 1
-        },
-        {
-          name: 'Ertugrul',
-          viewers: 711,
-          like: false,
-          favourite: false,
-          id: 2
-        },
-        {
-          name: 'Empire of osmon',
-          viewers: 811,
-          like: true,
-          favourite: true,
-          id: 3
-        },
-      ],
+      movies: [],
       term: '',
       filter: 'all'
     }
@@ -101,8 +81,41 @@ export default {
 
     updateFilterHandler(filter) {
       this.filter = filter
-    }
-  }}
+    },
+    // logger() {
+    //   console.log("Mounted");
+    // },
+    // mounted() {
+    //   this.logger()
+    // },
+    // updadeLog() {
+    //   console.log('updated');
+    // },
+
+    // updated() {
+    //   this.updadeLog()
+    // },
+    async fetchData() {
+      try {
+        const { data } = await axios.get("https://jsonplaceholder.typicode.com/posts?_limit=10")
+        const newArr = data.map(el => ({
+          id: el.id,
+          name: el.title,
+          viewers: el.id * 10,
+          like: false,
+          favourite: false
+        }))
+        this.movies = newArr
+
+      } catch (error) {
+        alert(error)
+      }
+    },
+  },
+  mounted() {
+    this.fetchData()
+  },
+}
 </script>
 <style>
 .app {
